@@ -16,9 +16,6 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 print(f"Using {device} device")
 
-loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
-
 classes = [
     "T-shirt/top",
     "Trouser",
@@ -31,3 +28,16 @@ classes = [
     "Bag",
     "Ankle boot",
 ]
+
+# Define model
+class cs21m003(nn.Module):
+    def __init__(self):
+        super(NeuralNetwork, self).__init__()
+        self.flatten = nn.Flatten()
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(32*32, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 10)
+        )
