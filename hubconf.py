@@ -41,3 +41,16 @@ class cs21m003(nn.Module):
             nn.ReLU(),
             nn.Linear(512, 10)
         )
+        def forward(self, x):
+        x = self.flatten(x)
+        logits = self.linear_relu_stack(x)
+        return logits
+def load_data():
+
+    # Download training data from open datasets.
+    training_data = datasets.FashionMNIST(
+        root="data",
+        train=True,
+        download=True,
+        transform=ToTensor(),
+    )
