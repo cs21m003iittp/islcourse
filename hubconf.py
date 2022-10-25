@@ -48,7 +48,7 @@ class cs21m003(nn.Module):
 def load_data():
 
     # Download training data from open datasets.
-    training_data = datasets.FashionMNIST(
+    training_data = datasets.KMNIST(
         root="data",
         train=True,
         download=True,
@@ -66,3 +66,52 @@ def create_dataloaders(training_data, test_data, batch_size=64):
         break
         
     return train_dataloader, test_dataloader
+def _train(dataloader, model, loss_fn=loss_fn, optimizer=optimizer):
+    size = len(dataloader.dataset)
+    model.train()
+    for batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device), y.to(device)
+
+        # Compute prediction error
+        pred = model(X)
+        loss = loss_fn(pred, y)
+
+        # Backpropagation
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if batch % 100 == 0:
+            loss, current = loss.item(), batch * len(X)
+            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+
+            
+def _test(dataloader, model, loss_fn):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader)
+    model.eval()
+    test_loss, correct = 0, 0
+    with torch.no_grad():
+        for X, y in dataloader:
+            X, y = X.to(device), y.to(device)
+            pred = model(X)
+            test_loss += loss_fn(pred, y).item()
+            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+    test_loss /= num_batches
+    correct /= size
+    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    
+def train(train_dataloader, test_dataloader, epochs=5):
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(train_dataloader, model, loss_fn, optimizer)
+        test(test_dataloader, model, loss_fn)
+    print("Done!")
+
+def sample_test(model, test_data):
+    model.eval()
+    x, y = test_data[0][0], test_data[0][1]
+    with torch.no_grad():
+        pred = model(x)
+        predicted, actual = classes[pred[0].argmax(0)], classes[y]
+        print(f'Predicted: "{predicted}", Actual: "{actual}"')
