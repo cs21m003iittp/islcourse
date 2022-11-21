@@ -17,6 +17,8 @@ import numpy as np
 from sklearn import metrics
 from sklearn import preprocessing
 from sklearn import model_selection
+from torchvision.transforms import ToTensor
+import torch.nn.functional as Fun
 
  #Part1
 
