@@ -151,7 +151,7 @@ def perform_gridsearch_cv_multimetric(model1=None, param_grid=None, cv=5, X=None
  
  #Part3
  
- class MyNN(nn.Module):
+class MyNN(nn.Module):
   def __init__(self,inp_dim=64,hid_dim=13,num_classes=10):
     super(MyNN,self).__init__()
     self.num_classes = num_classes
