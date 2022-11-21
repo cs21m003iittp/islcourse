@@ -12,9 +12,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report,recall_score,roc_auc_score,precision_score,f1_score
 from sklearn.model_selection import GridSearchCV
-import torch
-from torch import nn
-import torch.optim as optim
+import sklearn
 import numpy as np
 from sklearn import metrics
 from sklearn import preprocessing
@@ -81,7 +79,7 @@ def build_rf_model(X=None, y=None):
   return rf_model
 
 
-def get_metrics(model=None,X=None,y=None):
+def get_metrics(model1=None,X=None,y=None):
   # Obtain accuracy, precision, recall, f1score, auc score - refer to sklearn metrics
   
   if X.ndim > 2:
