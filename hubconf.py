@@ -20,6 +20,15 @@ def get_data_circles(n_points=100):
   X, y = make_circles(n_samples=n_points)
   return X,y
 
+ def get_data_mnist():
+  
+  
+  digits= load_digits()
+  X = digits.data
+  y = digits.target
+  
+  # write your code ...
+  return X,y
 
 def build_kmeans(X=None,k=10):
   
