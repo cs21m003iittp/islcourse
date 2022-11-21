@@ -40,7 +40,7 @@ def compare_clusterings(ypred_1,ypred_2):
   return h,c,v
 
  
- #Part 2
+ #Part 2A
  
  def build_lr_model(X, y):
   
@@ -74,3 +74,21 @@ def get_metrics(model,X,y):
   auc=roc_auc_score(y_test,y_pred_test)
 
   return acc, prec, rec, f1, auc
+
+ 
+#Part2B
+
+def get_paramgrid_lr():
+  
+  
+  lr_param_grid = {'penalty' : ['l1','l2']}
+
+  
+  
+  return lr_param_grid
+
+def get_paramgrid_rf():
+  
+  rf_param_grid = { 'n_estimators' : [1,10,100],'criterion' :["gini", "entropy"], 'max_depth' : [1,10,None]  }
+  
+  return rf_param_grid
