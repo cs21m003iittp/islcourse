@@ -75,10 +75,10 @@ def build_rf_model(X, y):
   
   return rf_model
 
-def get_metrics(model1,X,y):
+def get_metrics(model,X,y):
   
   y_test=y
-  y_pred_test = model1.predict(X)
+  y_pred_test = model.predict(X)
   
   
   
