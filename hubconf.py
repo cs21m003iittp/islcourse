@@ -29,3 +29,10 @@ def build_kmeans(X=None,k=10):
 def assign_kmeans(km=None,X=None):
   ypred = km.predict(X)
   return ypred
+
+def compare_clusterings(ypred_1,ypred_2):
+  pass
+  h=homogeneity_score(ypred_1,ypred_2)
+  c=completeness_score(ypred_1,ypred_2)
+  v=v_measure_score(ypred_1,ypred_2)
+  return h,c,v
