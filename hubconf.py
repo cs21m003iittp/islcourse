@@ -3,6 +3,7 @@ import numpy as np
 import sklearn
 from sklearn.datasets import make_blobs,make_circles
 from sklearn.model_selection import GridSearchCV
+form sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
