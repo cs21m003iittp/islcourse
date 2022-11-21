@@ -38,3 +38,39 @@ def compare_clusterings(ypred_1,ypred_2):
   c=completeness_score(ypred_1,ypred_2)
   v=v_measure_score(ypred_1,ypred_2)
   return h,c,v
+
+ 
+ #Part 2
+ 
+ def build_lr_model(X, y):
+  
+  lr_model = LogisticRegression(random_state=0).fit(X, y)
+  return lr_model
+
+def build_rf_model(X, y):
+  
+  
+  rf_model=RandomForestClassifier(max_depth=4, random_state=0)
+  
+  return rf_model
+
+  
+def get_metrics(model,X,y):
+  
+  X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=2,stratify=y)
+  model.fit(X_train,y_train)
+  
+  
+  y_pred_test = model.predict(X_test)
+
+  acc=accuracy_score(y_test, y_pred_test)
+
+  rec=recall_score(y_test,y_pred_test)
+
+  prec=precision_score(y_test,y_pred_test)
+
+  f1=f1_score(y_test,y_pred_test)
+  
+  auc=roc_auc_score(y_test,y_pred_test)
+
+  return acc, prec, rec, f1, auc
