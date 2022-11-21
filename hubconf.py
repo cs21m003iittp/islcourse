@@ -21,8 +21,6 @@ def get_data_circles(n_points=100):
   return X,y
 
 def get_data_mnist():
-  
-  
   digits= load_digits()
   X = digits.data
   y = digits.target
