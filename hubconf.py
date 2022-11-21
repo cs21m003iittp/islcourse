@@ -9,7 +9,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.metrics import homogeneity_score,completeness_score,v_measure_score
 
-
+ #Part1
 
 def get_data_blobs(n_points=100):
   X, y = make_blobs(n_samples=n_points)
