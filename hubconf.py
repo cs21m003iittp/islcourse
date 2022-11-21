@@ -1,103 +1,119 @@
 import torch
-import torchvision
-import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
-import numpy as np
-import torch.nn as nn
-import torch.nn.functional as F
+from torch import nn
 import torch.optim as optim
-from sklearn.metrics import classification_report, confusion_matrix, precision_score
+from sklearn.datasets import make_blobs
+from sklearn.datasets import make_circles
+from sklearn.datasets import load_digits
+from sklearn.cluster import KMeans
+from sklearn.metrics import homogeneity_score,completeness_score,v_measure_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report,recall_score,roc_auc_score,precision_score,f1_score
+from sklearn.model_selection import GridSearchCV
+import torch
+from torch import nn
+import torch.optim as optim
+import numpy as np
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn import model_selection
 
-from torchvision import datasets
-from torchvision.transforms import ToTensor, ToPILImage
-from PIL import Image
+ #Part1
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+def get_data_blobs(n_points=100):
+  X, y = make_blobs(n_samples=n_points)
+  return X,y
 
-print(f"Using {device} device")
+def get_data_circles(n_points=100):
+  pass
+  X, y = make_circles(n_samples=n_points)
+  return X,y
 
-classes = [
-    "T-shirt/top",
-    "Trouser",
-    "Pullover",
-    "Dress",
-    "Coat",
-    "Sandal",
-    "Shirt",
-    "Sneaker",
-    "Bag",
-    "Ankle boot",
-]
+def get_data_mnist():
+  digits= load_digits()
+  X = digits.data
+  y = digits.target
+  
+  # write your code ...
+  return X,y
 
-# Define model
-class cs21m003(nn.Module):
-    def __init__(self):
-        super(NeuralNetwork, self).__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(32*32, 512),
-            nn.ReLU(),
-            nn.Linear(512, 512),
-            nn.ReLU(),
-            nn.Linear(512, 10)
-        )
-        def forward(self, x):
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
-def load_data():
+def build_kmeans(X=None,k=10):
+  
+  km = KMeans(n_clusters=k)
+  km.fit(X)
+  return km
 
-    # Download training data from open datasets.
-    training_data = datasets.KMNIST(
-        root="data",
-        train=True,
-        download=True,
-        transform=ToTensor(),
-    )
-def create_dataloaders(training_data, test_data, batch_size=64):
 
-    # Create data loaders.
-    train_dataloader = DataLoader(training_data, batch_size=batch_size)
-    test_dataloader = DataLoader(test_data, batch_size=batch_size)
+def assign_kmeans(km=None,X=None):
+  ypred = km.predict(X)
+  return ypred
 
-    for X, y in test_dataloader:
-        print(f"Shape of X [N, C, H, W]: {X.shape}")
-        print(f"Shape of y: {y.shape} {y.dtype}")
-        break
-        
-    return train_dataloader, test_dataloader
-def _train(dataloader, model, loss_fn=loss_fn, optimizer=optimizer):
-    size = len(dataloader.dataset)
-    model.train()
-    for batch, (X, y) in enumerate(dataloader):
-        X, y = X.to(device), y.to(device)
+def compare_clusterings(ypred_1,ypred_2):
+  pass
+  h=homogeneity_score(ypred_1,ypred_2)
+  c=completeness_score(ypred_1,ypred_2)
+  v=v_measure_score(ypred_1,ypred_2)
+  return h,c,v
 
-        # Compute prediction error
-        pred = model(X)
-        loss = loss_fn(pred, y)
+ 
+ #Part 2a
+ 
+def build_lr_model(X, y):
+  
+  lr_model = LogisticRegression(random_state=0).fit(X, y)
+  # write your code...
+  # Build logistic regression, refer to sklearn
+  return lr_model
 
-        # Backpropagation
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+def build_rf_model(X, y):
+  
+  
+  # write your code...
+  # Build Random Forest classifier, refer to sklearn
+  rf_model=RandomForestClassifier(max_depth=4, random_state=0)
+  #rf_model.fit(X, y)
+  
+  return rf_model
 
-        if batch % 100 == 0:
-            loss, current = loss.item(), batch * len(X)
-            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
-            
-def _test(dataloader, model, loss_fn):
-    size = len(dataloader.dataset)
-    num_batches = len(dataloader)
-    model.eval()
-    test_loss, correct = 0, 0
-    with torch.no_grad():
-        for X, y in dataloader:
-            X, y = X.to(device), y.to(device)
-            pred = model(X)
-            test_loss += loss_fn(pred, y).item()
-            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-    test_loss /= num_batches
-    correct /= size
-    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
-    
+  
+def get_metrics(model,X,y):
+  
+  
+  X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=2,stratify=y)
+  model.fit(X_train,y_train)
+  
+  
+  y_pred_test = model.predict(X_test)
+  
+  acc=accuracy_score(y_test, y_pred_test)
+  
+  rec=recall_score(y_test,y_pred_test)
+  
+  prec=precision_score(y_test,y_pred_test)
+  
+  f1=f1_score(y_test,y_pred_test)
+  
+  auc=roc_auc_score(y_test,y_pred_test)
+  
+  return acc, prec, rec, f1, auc
+  
+  
+# part 2b...
+
+def get_paramgrid_lr():
+  
+  
+  lr_param_grid = {'penalty' : ['l1','l2']}
+
+  
+  
+  return lr_param_grid
+
+def get_paramgrid_rf():
+   
+  rf_param_grid = { 'n_estimators' : [1,10,100],'criterion' :["gini", "entropy"], 'max_depth' : [1,10,None]  }
+  
+  return rf_param_grid
