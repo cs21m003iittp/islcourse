@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
+from sklearn.metrics import homogeneity_score,completeness_score,v_measure_score
 
 
 
